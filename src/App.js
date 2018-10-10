@@ -1,42 +1,42 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Quote from './Quotes';
-import Lamp from './Lampe';
+import React, { Component } from "react";
+import "./App.css";
+import GenerateCitation from './GenerateCitation';
+import DisplayCitation from './DisplayCitation';
+
+const citation = {  
+  quote: "Shoplifting is a victimless crime, like punching someone in the dark.",
+  character: "Nelson Muntz",
+  image : "https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FNelsonMuntz.png?1497567511185",
+};
 
 class App extends Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-      working : true
-    }
+      quote: citation,
+    };
   }
-  changeAtome = () => {
-    this.setState({working: !this.state.working})
-  }
+
+  getCitation() {
+    // Récupération de l'employé via fetch
+    fetch("https://thesimpsonsquoteapi.glitch.me/quotes")
+      .then(response  =>  response.json())
+      .then(data  => {
+        // Une fois les données récupérées, on va mettre à jour notre state avec les nouvelles données
+        this.setState({
+          quote : data[0],
+        });
+    });
+}
+ 
   render() {
-    let atome = this.state.working ? "App-logo" : "App-logo-atome"
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className={atome} alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <button onClick={this.changeAtome}>Modifier la vitesse du logo</button>
-        <Lamp on />
-        <Lamp />
-        <Quote
-          quote="I believe the children are the future... Unless we stop them now!"
-          character="Homer Simpson"
-          image="https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FHomerSimpson.png?1497567511939"
-        />
-        <Quote
-          quote="Me fail English? That's unpossible"
-          character="Ralph Wiggum"
-          image="https://cdn.glitch.com/3c3ffadc-3406-4440-bb95-d40ec8fcde72%2FRalphWiggum.png?1497567511523"
-        />
+          <GenerateCitation  selectCitation={() =>  this.getCitation()}  />
+          <DisplayCitation  citation={this.state.quote}  />
       </div>
     );
   }
 }
+
 export default App;
